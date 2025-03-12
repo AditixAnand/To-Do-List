@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+    <div class="todo-container">
+        <h2>To-Do List 📝</h2>
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Enter your task...">
+            <button id="addTaskBtn" onclick="addNewTask()">Add Task</button>
+        </div>
+        <ul id="taskList"></ul>
+        <p id="pending-tasks">Pending 0</p>
+
+    </div>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    
+    .todo-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 350px;
+        text-align: center;
+    }
+    
+    h2 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .input-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    input {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    
+    button:hover {
+        background: #218838;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    li {
+        background: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 5px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    li .delete-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    
+    li .delete-btn:hover {
+        background: #c82333;
+    }
+</style>
+<script>
+    const obj = document.getElementById('taskInput');  
+    const obj1 = document.getElementById('taskList'); 
+    const obj4 = document.getElementById('pending-tasks');
+
+    const tasks = [];
+    const state = [];
+    let count = 0;
+
+    function addNewTask() {
+        if (obj.value.trim() === "") return; 
+
+        tasks.push(obj.value);
+        state.push(false);
+        count++;
+        obj4.innerHTML = `Pending ${count}`;
+        console.log('Task added successfully');
+        obj.value = ""; 
+        render();
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        state.splice(index, 1);
+        if (count > 0) {
+            count--;
+            obj4.innerHTML = `Pending ${count}`;
+        }
+        render();
+    }
+
+    function done(obj2, index) {
+        if (obj2.checked) {
+            document.getElementById(`task-para-${index}`).style.textDecoration = 'line-through';
+            if (count > 0) count--;
+            state[index] = true;
+        } else {
+            document.getElementById(`task-para-${index}`).style.textDecoration = 'none';
+            count++;
+            state[index] = false;
+        }
+        obj4.innerHTML = `Pending ${count}`;
+        console.log(obj2.checked + " " + index);
+    }
+
+    function render() {
+        obj1.innerHTML = ""; 
+        for (let i = tasks.length - 1; i >= 0; i--) {
+            obj1.innerHTML += `
+                <li>
+                    <input type="checkbox" onclick="done(this, ${i})" ${state[i] ? 'checked' : ''}/>
+                    <span id="task-para-${i}" style="text-decoration: ${state[i] ? 'line-through' : 'none'};">${tasks[i]}</span>
+                    <button class="delete-btn" onclick="deleteTask(${i})">X</button>
+                </li>
+            `;
+        }
+    }
+</script>
+        
+</html>
